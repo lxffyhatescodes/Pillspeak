@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Reads the .env file into environment variables
 import time
 import warnings
 import requests
@@ -89,14 +92,14 @@ class AITranslator:
     """Uses Gemini API to simplify medical text into plain English for PillSpeak."""
 
     def __init__(self):
-        api_key = os.getenv("PillSpeak") or os.getenv("GEMINI_API_KEY")
+        api_key = os.getenv("PillSpeak") or os.getenv("PillSpeak")
 
         if not api_key:
             raise ValueError(
                 "API Key missing. Please ensure environment variable 'PillSpeak' "
                 "is configured in PyCharm's Run/Debug Configurations."
             )
-        self.client = genai.Client(api_key=api_key)
+        self.client = genai.Client(api_key="AQ.Ab8RN6I1QTQDG5N5uPkHWWuKZb_KCPGP0wplyRlyM3y0DTCQ1A")
 
     def translate(
         self,
@@ -155,3 +158,27 @@ class AITranslator:
                         time.sleep(2)  # Wait 2 seconds before retrying
                         continue
                 raise RuntimeError(f"AI Translation request failed: {e}")
+
+    SYSTEM_PROMPT = """You are an expert patient-education specialist. Translate the provided raw FDA drug information into plain, comforting English at a 6th-grade reading level.
+
+    STRICT GUIDELINES:
+    1. Vocabulary: Replace all medical jargon with simple words (e.g., use 'liver' instead of 'hepatic', 'pain reliever' instead of 'analgesic', 'swelling' instead of 'edema').
+    2. Sentence Length: Keep sentences short (under 15 words). Use active voice.
+    3. Structure: You MUST use only these 4 markdown sections:
+       - 📋 What This Medication Is
+       - 💡 How to Take It
+       - ⚠️ Crucial Safety Warnings
+       - 🩺 Common Side Effects
+    4. Tone: Clear, direct, and reassuring. Do not invent medical facts not present in the source text.
+    """
+
+    def simplify_medication_info(self, raw_fda_text: str) -> str:
+        prompt = (
+            f"{SYSTEM_PROMPT}\n\nRAW FDA DRUG"
+            f" DATA:\n{raw_fda_text[:4000]}"  # Cap length to stay within efficient context limits
+        )
+
+        response = self.client.models.generate_content(
+            model=self.model, contents=prompt
+        )
+        return response.text
