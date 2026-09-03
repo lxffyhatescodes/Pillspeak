@@ -1,6 +1,6 @@
 # 💊 PillSpeak: Patient Medication Translator
 
-PillSpeak is a command-line tool that looks up medications, pulls official data from the FDA's [openFDA](https://open.fda.gov/) API, checks for active recalls, and uses Google's Gemini AI to translate dense clinical drug labels into clear, 5th-grade-level plain English.
+PillSpeak looks up medications, pulls official data from the FDA's [openFDA](https://open.fda.gov/) API, checks for active recalls, and uses Google's Gemini AI to translate dense clinical drug labels into clear, 5th-grade-level plain English. It's available both as a command-line tool and as a Streamlit web app.
 
 > ⚠️ **Disclaimer**: PillSpeak is an informational tool, not a substitute for professional medical advice. Always consult a doctor or pharmacist before making decisions about medication.
 
@@ -30,7 +30,7 @@ PillSpeak is a command-line tool that looks up medications, pulls official data 
 ### Dependencies
 
 ```bash
-pip install requests google-genai
+pip install requests google-genai streamlit
 ```
 
 ## Setup
@@ -43,14 +43,14 @@ pip install requests google-genai
 2. Install dependencies (see above).
 3. Set your Gemini API key as an environment variable. Either name works:
    ```bash
-   export GEMINI_API_KEY="your-api-key-here"
+   export GEMINI_API_KEY="AQ.Ab8RN6JHDVUUn8GGZPAx2zINXT8giDAXIpJqOKbZDBQiR2g"
    # or
-   export PillSpeak="your-api-key-here"
+   export PillSpeak="AQ.Ab8RN6JHDVUUn8GGZPAx2zINXT8giDAXIpJqOKbZDBQiR2g"
    ```
 
 ## Usage
 
-Run the app from the terminal:
+### Command Line
 
 ```bash
 python main.py
@@ -71,11 +71,20 @@ You'll see a menu:
 - **Option 3** — clear all saved history
 - **Option 4** — exit the program
 
+### Web App (Streamlit)
+
+```bash
+streamlit run app.py
+```
+
+Enter a medication name and click **Search** to see its recall status and plain-language summary in the browser. Past searches appear in the sidebar, with an option to clear history. Both the CLI and the web app read from and write to the same `history.json` file.
+
 ## Project Structure
 
 ```
 pillspeak/
 ├── main.py             # CLI entry point and menu loop
+├── app.py              # Streamlit web app entry point
 ├── models.py            # Medication dataclass (to_dict / from_dict for JSON storage)
 ├── services.py           # FDAClient (openFDA lookups) and AITranslator (Gemini integration)
 ├── storage.py            # HistoryManager for reading/writing history.json
