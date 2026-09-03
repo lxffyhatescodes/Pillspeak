@@ -5,32 +5,53 @@ from services import FDAClient, AITranslator
 from storage import HistoryManager
 from utils import TextSanitizer
 
+
 st.set_page_config(
     page_title="PillSpeak - Medication Translator",
     page_icon="💊",
     layout="wide",
 )
 
-# Minimal, deliberate styling on top of Streamlit's defaults
 st.markdown(
     """
     <style>
-    .stApp { background-color: #F7F9F8; }
-    h1, h2, h3 { color: #1B4B43; }
-    .stButton>button {
-        background-color: #1B4B43;
-        color: #FFFFFF;
-        border-radius: 6px;
+    /* Font & Dynamic Base Styling */
+    .stApp {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Primary Action Buttons (Search & Download) */
+    div.stButton > button:first-child {
+        background-color: #0284c7;
+        color: #ffffff !important;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        padding: 0.6rem 1rem;
+        transition: all 0.2s ease;
+    }
+    div.stButton > button:first-child:hover {
+        background-color: #0369a1;
+        color: #ffffff !important;
         border: none;
     }
-    .stButton>button:hover {
-        background-color: #143A34;
-        color: #FFFFFF;
+
+    /* Input Field & Sidebar Border Tweaks */
+    .stTextInput input {
+        border-radius: 8px;
+    }
+
+    /* Theme-Adaptive Card Containers */
+    div[data-testid="stExpander"] {
+        border-radius: 8px;
+        border: 1px solid var(--border-color, rgba(128, 128, 128, 0.2));
     }
     </style>
-    """,
+""",
     unsafe_allow_html=True,
 )
+# Minimal, deliberate styling on top of Streamlit's defaults
+
 
 
 @st.cache_resource
